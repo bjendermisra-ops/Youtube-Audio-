@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#5C1A22">
+<title>ISKCON Real Audio</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%AA%94%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Yatra+One&family=Mukta:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<!-- CSS File Linking -->
+<link rel="stylesheet" href="styles.css">
+<meta name='google-adsense-platform-account' content='ca-host-pub-1556223355139109'/>
+<meta name='google-adsense-platform-domain' content='blogspot.com'/>
+</head>
+<body>
+
+  <div class="overlay" id="overlay" onclick="closeDrawer()"></div>
+
+  <!-- Mobile Drawer Menu -->
+  <nav class="drawer" id="drawer" aria-hidden="true">
+    <div class="drawer-head">
+      <div class="drawer-flame">🪔</div>
+      <div class="drawer-title">ISKCON Real Audio</div>
+      <div class="drawer-sub">Hare Krishna Kirtan &amp; Bhajans</div>
+    </div>
+    <a class="drawer-link active" href="index.html"><span class="material-icons">home</span>Home</a>
+    <a class="drawer-link" href="about.html"><span class="material-icons">info</span>About Us</a>
+    <a class="drawer-link" href="privacy.html"><span class="material-icons">privacy_tip</span>Privacy Policy</a>
+    <a class="drawer-link" href="terms.html"><span class="material-icons">gavel</span>Terms &amp; Conditions</a>
+    <a class="drawer-link" href="contact.html"><span class="material-icons">mail</span>Contact Us</a>
+    <button class="drawer-link" onclick="shareApp()"><span class="material-icons">share</span>Share App</button>
+    <div class="drawer-foot">Developed with 🙏 by Dev Santosh</div>
+  </nav>
+
+  <div class="app-container">
+    <!-- Desktop Persistent Sidebar -->
+    <aside class="desktop-sidebar">
+      <div class="desktop-brand">
+        <span class="flame">🪔</span>
+        <div class="desktop-brand-title">ISKCON Audio</div>
+      </div>
+      <nav class="desktop-nav">
+        <a class="desktop-nav-link active" href="index.html"><span class="material-icons">home</span>Home</a>
+        <a class="desktop-nav-link" href="about.html"><span class="material-icons">info</span>About Us</a>
+        <a class="desktop-nav-link" href="privacy.html"><span class="material-icons">privacy_tip</span>Privacy Policy</a>
+        <a class="desktop-nav-link" href="terms.html"><span class="material-icons">gavel</span>Terms &amp; Conditions</a>
+        <a class="desktop-nav-link" href="contact.html"><span class="material-icons">mail</span>Contact Us</a>
+        <a class="desktop-nav-link" href="#" onclick="event.preventDefault(); showFavoritesOnly();"><span class="material-icons">star</span>Favorites Library</a>
+        <a class="desktop-nav-link" href="#" onclick="event.preventDefault(); shareApp();"><span class="material-icons">share</span>Share App</a>
+      </nav>
+    </aside>
+
+    <div class="main-content">
+      <header class="header">
+        <button class="icon-btn" onclick="openDrawer()" aria-label="Menu"><span class="material-icons">menu</span></button>
+        <input type="text" id="searchInput" value="ISKCON Kirtan">
+        <button class="search-btn" id="searchBtn" onclick="searchYouTube(true)">Search</button>
+      </header>
+
+      <div class="chips" id="chips">
+        <button class="chip" onclick="selectChip(this,'ISKCON Kirtan')">Kirtan</button>
+        <button class="chip" onclick="selectChip(this,'ISKCON Bhajan')">Bhajan</button>
+        <button class="chip" onclick="selectChip(this,'Mangal Aarti ISKCON')">Mangal Aarti</button>
+        <button class="chip" onclick="selectChip(this,'Bhagavad Gita class')">Gita Class</button>
+        <button class="chip" onclick="selectChip(this,'Hare Krishna Maha Mantra')">Maha Mantra</button>
+        <button class="chip" id="favChip" onclick="showFavoritesOnly(this)">⭐ My Favorites</button>
+      </div>
+
+      <!-- Filter Sorting Bar -->
+      <div class="filter-row">
+        <span class="filter-label"><span class="material-icons" style="font-size:16px;">sort</span> Order:</span>
+        <select class="filter-select" id="sortBy" onchange="searchYouTube(true)">
+          <option value="relevance">Relevance (Default)</option>
+          <option value="date">Latest Uploads (New)</option>
+          <option value="viewCount">Most Viewed (Popular)</option>
+          <option value="rating">Top Rated</option>
+        </select>
+      </div>
+
+      <div id="status">Ready to load...</div>
+
+      <div class="feed" id="videoFeed"></div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"><span class="material-icons">play_circle</span><span id="toastText"></span></div>
+
+  <!-- Mini Player -->
+  <div class="player" id="miniPlayer" onclick="expandPlayer()">
+    <div class="mini-progress"><div class="mini-progress-fill" id="miniProgressFill"></div></div>
+    <img class="mini-art" id="miniArt" alt="">
+    <div class="player-info">
+      <div class="song-title" id="nowPlaying">Select a Kirtan to Play</div>
+      <div class="song-channel" id="nowPlayingChannel"></div>
+    </div>
+    <div class="controls">
+      <button class="ctrl-btn" id="prevBtn" onclick="event.stopPropagation();prevTrack()" disabled><span class="material-icons">skip_previous</span></button>
+      <button class="ctrl-btn" id="playBtn" onclick="event.stopPropagation();togglePlay()"><span class="material-icons" style="font-size:44px;">play_circle</span></button>
+      <button class="ctrl-btn" id="nextBtn" onclick="event.stopPropagation();nextTrack()" disabled><span class="material-icons">skip_next</span></button>
+    </div>
+    <!-- Desktop Only Volume and utility widget -->
+    <div class="desktop-player-utilities" onclick="event.stopPropagation()">
+      <span class="material-icons">volume_up</span>
+      <input type="range" class="volume-slider" id="volumeSlider" min="0" max="100" value="100" oninput="changeVolume(this.value)">
+    </div>
+  </div>
+
+  <!-- Expanded Now Playing sheet -->
+  <div class="sheet" id="sheet">
+    <div class="sheet-handle"></div>
+    <button class="sheet-close" onclick="collapsePlayer()" aria-label="Minimize"><span class="material-icons">keyboard_arrow_down</span></button>
+    <div class="sheet-art-wrap"><img class="sheet-art" id="sheetArt" alt=""></div>
+    <div class="sheet-title" id="sheetTitle">Select a Kirtan to Play</div>
+    <div class="sheet-channel" id="sheetChannel"></div>
+    
+    <div class="sheet-actions-row">
+      <button class="sheet-fav-btn" id="sheetFavBtn" onclick="toggleFavoriteCurrent()" aria-label="Add to Favorites"><span class="material-icons">star_border</span></button>
+    </div>
+
+    <div class="now-playing-flag"><span class="flame" id="sheetFlame">🪔</span><span id="sheetStateText">Paused</span></div>
+    <div class="seek-row">
+      <span class="time" id="currentTime">0:00</span>
+      <input type="range" id="seekBar" min="0" max="100" value="0">
+      <span class="time" id="durationTime">0:00</span>
+    </div>
+    <div class="sheet-controls">
+      <button class="ctrl-btn big" id="prevBtn2" onclick="prevTrack()" disabled><span class="material-icons">skip_previous</span></button>
+      <button class="ctrl-btn play-btn big" id="playBtn2" onclick="togglePlay()"><span class="material-icons" style="font-size:70px;">play_circle</span></button>
+      <button class="ctrl-btn big" id="nextBtn2" onclick="nextTrack()" disabled><span class="material-icons">skip_next</span></button>
+    </div>
+  </div>
+
+  <!-- The Hidden Official Player -->
+  <div class="yt-hidden-wrapper">
+    <div id="ytplayer"></div>
+  </div>
+
+  <!-- YouTube API Script -->
+  <script src="https://www.youtube.com/iframe_api"></script>
+  <!-- Main JavaScript File Linking -->
+  <script src="app.js"></script>
+</body>
+</html>
